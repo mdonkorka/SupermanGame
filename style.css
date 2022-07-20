@@ -1,0 +1,13 @@
+#gameContainer{
+    margin-top: 20px;
+    text-align: center;
+}
+
+#gameBoard{
+    border: 2px solid black;
+}
+
+#resetBtn{
+    width: 70px;
+    height: 30px;
+}
