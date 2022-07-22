@@ -1,8 +1,14 @@
 const resetBtn = document.querySelector("#resetBtn");
+const score = document.querySelector("#score");
+const highScore = document.querySelector("#highScore");
 const ctx = gameBoard.getContext("2d");
 let boardBackground = "lightgrey";
 let KryptoniteO;
 let KSpeed = 1;
+let scoreVal = 0;
+let running = false;
+let myId;
+let SupermanO;
 
 class Superman {
     constructor({x, y}){
@@ -23,12 +29,21 @@ class Kryptonite {
     }
 }
 
-let SupermanO = new Superman({x:30, y:200});
+if ((document.cookie.indexOf('highscore=') == -1)) {
+    document.cookie = "highscore=0; 604800000; path=/";
+}
 
+resetBtn.addEventListener("click", resetGame); //reset Button
+window.addEventListener("keydown", changeSPosition);
+
+//START GAME
 gameStart();
 
 function gameStart() {
     running = true;
+    highScore.textContent = `High Score: ${getHCookie()}`;
+    score.textContent = "Current Score: 0";
+    SupermanO = new Superman({x:30, y:200}); 
     drawSuperman();
     createRandomK();
     drawRandomK();
@@ -37,14 +52,14 @@ function gameStart() {
 
 function Step(){
     if(running){
-        setTimeout(()=>{
+        myId = setTimeout(()=>{
             clearCanvas();
             moveKryptonite();
             drawRandomK();
             drawSuperman();
             checkKandGameOver();
             Step();
-        }, 5)
+        }, 1)
     }
 }
 
@@ -53,6 +68,7 @@ function moveKryptonite(){
 }
 
 function clearCanvas(){
+    //console.log("clearCanvas");
     ctx.fillStyle = boardBackground;
     ctx.fillRect(0, 0, 480, 480);
 }
@@ -75,7 +91,6 @@ function drawSuperman() {
                     SupermanO.width, SupermanO.height);
 }
 
-window.addEventListener("keydown", changeSPosition)
 function changeSPosition(event){
     const keyPressed = event.keyCode;
     const UP = 38;
@@ -96,14 +111,36 @@ function changeSPosition(event){
     }
 }
 
+function getHCookie(){
+    let HCookieDecoded = decodeURIComponent(document.cookie); //gets all cookies
+    CookieArray = HCookieDecoded.split("="); //split cookie in to array at = sign
+    return CookieArray[CookieArray.length-1]; //gets last value in array
+}
+
+function highScoreF(scoreVal){
+    if (scoreVal > getHCookie()){
+        document.cookie = `highscore=${scoreVal}; 604800000; path=/`;
+    }
+}
+
 function checkKandGameOver(){
     if (((SupermanO.coordinate.x <= KryptoniteO.coordinate.x) && (SupermanO.coordinate.x + SupermanO.width >= KryptoniteO.coordinate.x)
         || ((KryptoniteO.coordinate.x <= SupermanO.coordinate.x) && (KryptoniteO.coordinate.x + KryptoniteO.width >= SupermanO.coordinate.x)))
             && SupermanO.coordinate.y == KryptoniteO.coordinate.y) {
+            highScoreF(scoreVal);
             running = false;
     }
     if (KryptoniteO.coordinate.x + KryptoniteO.width <= 0){
         KSpeed+=0.2;
+        scoreVal += 1;
+        score.textContent = `Current Score: ${scoreVal}`;
         createRandomK();
     }
+}
+
+function resetGame(){
+    clearInterval(myId);
+    scoreVal = 0;
+    KSpeed = 1;
+    gameStart();
 }
