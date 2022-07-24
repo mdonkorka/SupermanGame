@@ -1,8 +1,14 @@
 const resetBtn = document.querySelector("#resetBtn");
-const score = document.querySelector("#score");
+const score = document.querySelector("#currentScore");
 const highScore = document.querySelector("#highScore");
 const ctx = gameBoard.getContext("2d");
-let boardBackground = "lightgrey";
+const backgroundImg = new Image();
+const supermanImg = new Image();
+const kryptoniteImg = new Image();
+backgroundImg.src = 'Images/StarBackgroundCropped.png';
+supermanImg.src = 'Images/SupermanImg.png';
+kryptoniteImg.src = 'Images/KryptoniteImg.png';
+
 let KryptoniteO;
 let KSpeed = 1;
 let scoreVal = 0;
@@ -15,8 +21,8 @@ class Superman {
         this.coordinate = {
             x, y
         }
-        this.width = 80;
-        this.height = 80;
+        this.width = 114;
+        this.height = 74;
     }
 }
 class Kryptonite {
@@ -24,8 +30,8 @@ class Kryptonite {
         this.coordinate = {
             x, y
         }
-        this.width = 80;
-        this.height = 80;
+        this.width = 66;
+        this.height = 74;
     }
 }
 
@@ -43,7 +49,7 @@ function gameStart() {
     running = true;
     highScore.textContent = `High Score: ${getHCookie()}`;
     score.textContent = "Current Score: 0";
-    SupermanO = new Superman({x:30, y:200}); 
+    SupermanO = new Superman({x:30, y:200});
     drawSuperman();
     createRandomK();
     drawRandomK();
@@ -67,10 +73,14 @@ function moveKryptonite(){
     KryptoniteO.coordinate.x-=KSpeed;
 }
 
+function drawBG(){
+    ctx.drawImage(
+        backgroundImg, 0, 0
+    )
+}
+
 function clearCanvas(){
-    //console.log("clearCanvas");
-    ctx.fillStyle = boardBackground;
-    ctx.fillRect(0, 0, 480, 480);
+    drawBG();
 }
 
 function createRandomK(){
@@ -81,15 +91,12 @@ function createRandomK(){
 }
 
 function drawRandomK() {
-    ctx.strokeStyle = "green";
-    ctx.strokeRect(KryptoniteO.coordinate.x, KryptoniteO.coordinate.y, KryptoniteO.width, KryptoniteO.height);
+    ctx.drawImage(kryptoniteImg, KryptoniteO.coordinate.x, KryptoniteO.coordinate.y);
 }
 
 function drawSuperman() {
-    ctx.strokeStyle = "red";
-    ctx.strokeRect(SupermanO.coordinate.x, SupermanO.coordinate.y, 
-                    SupermanO.width, SupermanO.height);
-}
+    ctx.drawImage(supermanImg, SupermanO.coordinate.x, SupermanO.coordinate.y);
+    }
 
 function changeSPosition(event){
     const keyPressed = event.keyCode;

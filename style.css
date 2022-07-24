@@ -7,8 +7,27 @@
     border: 2px solid black;
 }
 
+#currentScore{
+    font-family: "Comic Sans MS", cursive;
+    font-size: 32px;
+    color: rgb(64, 177, 41);
+}
+
+#highScore{
+    font-family: "Comic Sans MS", cursive;
+    font-size: 26px;
+    color: rgb(235, 52, 52);
+}
+
+
 #resetBtn{
-    width: 70px;
-    height: 30px;
+    margin-top: 10px;
+    font-family: "Comic Sans MS", cursive;
+    width: 115px;
     cursor: pointer;
+    font-size: 22px;
+    background-color: rgb(32, 43, 197);
+    color: white;
+    border-radius: 15px;
+    border: 3px solid black;
 }
